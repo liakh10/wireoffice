@@ -67,7 +67,10 @@ button,input{font:inherit;color:inherit}
 /* the lead card carries a hairline grid and a brass seam along its top edge */
 .card.lead{overflow:hidden;background:var(--card) linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px) 0 0/64px 64px,var(--card) linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px) 0 0/64px 64px}
 .card.lead::before{content:"";position:absolute;inset:0 0 auto;height:1px;background:linear-gradient(90deg,transparent,rgba(217,164,65,.65),transparent)}
-.card.lead::after{content:"";position:absolute;top:-45%;right:-18%;width:52%;height:150%;background:radial-gradient(closest-side,rgba(217,164,65,.11),transparent);pointer-events:none}
+.card.lead::after{content:"";position:absolute;top:-45%;right:-18%;width:52%;height:150%;background:radial-gradient(closest-side,rgba(217,164,65,.11),transparent);pointer-events:none;z-index:1}
+.card.lead video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.card.lead .veil{position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,rgba(15,15,16,.97) 34%,rgba(15,15,16,.74) 68%,rgba(15,15,16,.5)),linear-gradient(180deg,rgba(15,15,16,.55),rgba(15,15,16,.88))}
+.card.lead .head{position:relative;z-index:2}
 h1{margin:0 0 8px;font:700 clamp(26px,3.6vw,36px)/1.1 var(--dsp);letter-spacing:-.035em;position:relative;z-index:1}
 h2{margin:0;font:600 20px var(--dsp);letter-spacing:-.025em}
 p.lede{margin:0;color:var(--dim);font-size:14.5px;max-width:74ch}
@@ -169,6 +172,10 @@ p.lede{margin:0;color:var(--dim);font-size:14.5px;max-width:74ch}
 
     <div class="page">
       <div class="card lead">
+        <video id="leadVid" autoplay muted loop playsinline preload="auto" poster="/assets/video/hero-poster.v1.jpg" aria-hidden="true" tabindex="-1">
+          <source src="/assets/video/hero.v1.mp4" type="video/mp4">
+        </video>
+        <div class="veil"></div>
         <div class="head">
           <div>
             <h1>Every X handle already has a delivery address</h1>
@@ -269,6 +276,18 @@ $('chartLink').href = CA ? 'https://dexscreener.com/robinhood/' + CA : window.DE
 if (CA) $('caAddr').textContent = CA; else $('caAddr').classList.add('soon');
 if (T.OFFICE) $('aOffice').textContent = T.OFFICE;
 if (T.BURNER) $('aBurner').textContent = T.BURNER;
+
+/* the loop behind the lead card is decoration: it stops for reduced motion and while the tab is hidden */
+const leadVid = $('leadVid');
+if (leadVid) {
+  const still = matchMedia('(prefers-reduced-motion: reduce)');
+  const apply = () => { if (still.matches || document.hidden) leadVid.pause(); else leadVid.play().catch(() => {}); };
+  still.addEventListener('change', apply);
+  document.addEventListener('visibilitychange', apply);
+  leadVid.addEventListener('loadeddata', apply);
+  ['pointerdown', 'scroll', 'keydown'].forEach(t => addEventListener(t, apply, { passive: true }));
+  apply();
+}
 
 $('caCopy').onclick = async () => {
   const b = $('caCopy');

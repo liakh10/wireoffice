@@ -1,7 +1,9 @@
-node_modules/
 .env.local
 .vercel
 .vercel/
-contracts/node_modules/
-assets/video/key_raw.png
+assets/video/*_raw.mp4
+assets/video/hero_frame*.png
 assets/video/key_16x9.png
+assets/video/key_raw.png
+contracts/node_modules/
+node_modules/
