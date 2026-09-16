@@ -192,6 +192,9 @@ p.lede{margin:0;color:var(--dim);font-size:14.5px;max-width:74ch}
         <div class="stat"><span>Office fee</span><b>5<em>% burned</em></b></div>
       </div>
 
+      <div class="sect" id="activity"><h2>Activity</h2><span class="chip" id="feedHead">·</span></div>
+      <div class="rows" id="feed"><div class="empty">Reading the logs</div></div>
+
       <div class="sect" id="lookup"><h2>Lookup</h2><a href="/docs">How the address is derived →</a></div>
       <div class="look">
         <div class="card">
@@ -340,6 +343,37 @@ $('coinGo').onclick = async () => {
   } catch (e) { set('<span class="err">' + esc(e.shortMessage || e.message) + '</span>', ''); }
   finally { b.disabled = false; b.textContent = 'Check the coin'; }
 };
+
+/* ---------------------------------------------------------------- the activity feed, straight from event logs */
+const since = ts => { if (!ts) return ''; const s = Math.floor(Date.now() / 1000) - ts; if (s < 90) return 'just now'; if (s < 3600) return Math.floor(s / 60) + 'm ago'; if (s < 86400) return Math.floor(s / 3600) + 'h ago'; return Math.floor(s / 86400) + 'd ago'; };
+const line = e => {
+  const who = e.handle ? `<b>@${esc(e.handle)}</b>` : 'a box';
+  if (e.kind === 'opened') return { t: `${who} · box opened`, v: '' };
+  if (e.kind === 'wired') return { t: `${who} · wired`, v: '$' + Number(e.usdg).toFixed(2), on: true };
+  if (e.kind === 'paid') return { t: `${who} · paid out to ${esc(T.short(e.wallet))}`, v: '$' + Number(e.usdg).toFixed(2) };
+  if (e.kind === 'claimed') return { t: `${who} · claimed by ${esc(T.short(e.wallet))}`, v: 'claimed', on: true };
+  return { t: who, v: '' };
+};
+async function feed() {
+  try {
+    const r = await fetch('/api/feed').then(x => x.json());
+    $('feedHead').textContent = r.head ? 'block ' + r.head.toLocaleString('en-US') : 'not deployed';
+    if (!r.events || !r.events.length) {
+      $('feed').innerHTML = `<div class="empty">${r.note === 'not deployed yet' ? 'Nothing has happened yet: Wire Office is not deployed.' : 'No activity in the last day.'}</div>`;
+      return;
+    }
+    $('feed').innerHTML = r.events.map(e => {
+      const l = line(e);
+      return `<div class="row" style="grid-template-columns:minmax(0,1fr) auto auto">
+        <div class="c"><b style="font-weight:500">${l.t}</b></div>
+        <div class="c" style="text-align:right"><b class="num"${l.on ? ' style="color:var(--brass2)"' : ''}>${l.v}</b></div>
+        <span class="chip">${since(e.at)}</span>
+      </div>`;
+    }).join('');
+  } catch { $('feed').innerHTML = '<div class="empty">Could not read the logs right now.</div>'; }
+}
+feed();
+setInterval(() => { if (!document.hidden) feed(); }, 60000);
 
 /* ---------------------------------------------------------------- boxes */
 function paint() {
