@@ -12,9 +12,9 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a1524;--deep:#060e1a;--panel:#10203a;--panel2:#16294a;--line:#24406a;--ink:#e9eff8;--dim:#93a8c6;--brass:#d9a441;--brass2:#f3cd7c;--tape:#efe8d6;--d:'Instrument Serif',Georgia,serif;--m:'Courier Prime',ui-monospace,monospace}
+:root{--bg:#0a1524;--deep:#060e1a;--panel:#10203a;--panel2:#16294a;--line:#24406a;--ink:#e9eff8;--dim:#93a8c6;--brass:#d9a441;--brass2:#f3cd7c;--tape:#efe8d6;--d:'Bodoni Moda',Georgia,serif;--m:'Courier Prime',ui-monospace,monospace}
 *{box-sizing:border-box}
 html{overflow-x:hidden;scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.8 var(--m)}
@@ -55,17 +55,13 @@ pre{font:inherit;background:var(--deep);border:1px solid var(--line);border-radi
 ul{margin:0 0 12px;padding-left:18px;max-width:66ch;color:#ccdaeb}
 li{margin-bottom:5px}
 .note{border-left:2px solid var(--brass);padding-left:12px;color:var(--dim);margin:14px 0;max-width:62ch}
-.strip{width:min(520px,100%);background:var(--tape);color:#1d1a14;border-radius:2px;padding:22px 24px 26px;position:relative;box-shadow:0 22px 50px rgba(0,0,0,.45);cursor:pointer;margin:16px 0 8px}
-.strip::before,.strip::after{content:"";position:absolute;top:0;bottom:0;width:14px;background-image:radial-gradient(circle at center,#0a1524 3px,transparent 3.2px);background-size:14px 20px;opacity:.85}
-.strip::before{left:0}
-.strip::after{right:0}
-.strip .in2{padding:0 12px}
-.strip h3{margin:0;color:#1d1a14;font:400 22px var(--d);text-align:center;letter-spacing:.04em;text-transform:none}
-.strip .ln{border-top:1px dashed #b3aa93;margin:12px 0}
-.strip .r{display:flex;justify-content:space-between;gap:12px;font-size:12px}
-.strip .ca{margin-top:12px;text-align:center;font-size:clamp(10px,2.4vw,14px);word-break:break-all;font-weight:700}
-.strip .ca.soon{font:400 32px var(--d);letter-spacing:.14em}
-.strip .copy{display:block;margin:10px auto 0;background:none;border:0;color:#7a5a12;font:700 11px var(--m);letter-spacing:.18em;cursor:pointer}
+.flapboard{display:inline-block;max-width:100%;background:linear-gradient(180deg,#1b1a17,#0d0c0a);border:1px solid #3a3730;border-radius:4px;padding:15px 15px 13px;box-shadow:0 22px 50px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.05);cursor:pointer;margin:16px 0 8px}
+.flapboard .cap{font:400 9.5px var(--m);letter-spacing:.3em;text-transform:uppercase;color:#8b8577;margin-bottom:10px}
+.flaps{display:flex;gap:2px;justify-content:center;flex-wrap:nowrap;max-width:100%}
+.flap{flex:1 1 auto;min-width:0;height:31px;background:linear-gradient(180deg,#26241f 0 49%,#1a1815 51% 100%);border-radius:2px;display:grid;place-items:center;font:700 clamp(7px,1.5vw,13px)/1 var(--m);color:#f0e6cf;position:relative;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(0,0,0,.6)}
+.flap::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.55)}
+.flap.soon{height:48px;font-size:clamp(18px,4.4vw,30px);font-family:var(--d);font-weight:400;letter-spacing:.1em}
+.flapboard .cp{background:none;border:0;color:var(--brass2);font:400 10.5px var(--m);letter-spacing:.2em;cursor:pointer;margin-top:11px}
 @media (max-width:900px){.page{grid-template-columns:1fr;gap:0}nav.toc{position:static;padding:22px 0 0}nav.toc ol{display:flex;flex-wrap:wrap;gap:4px;border-left:0}nav.toc a{border:1px solid var(--line);border-radius:2px;padding:4px 10px;margin:0}nav.toc a.on{border-color:var(--brass)}}
 @media (max-width:620px){.top .r .hideSm{display:none}.chip{display:none}.brand b{font-size:19px}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
@@ -208,18 +204,10 @@ li{margin-bottom:5px}
       <div><span>ETH / USD feed</span><b>0x78F3556b67E17Df817D51Ef5a990cDaF09E8d3A9</b></div>
     </div>
 
-    <div class="strip" id="strip" role="button" tabindex="0" aria-label="Copy contract address">
-      <div class="in2">
-        <h3>Wire Office</h3>
-        <div class="ln"></div>
-        <div class="r"><span>TICKER</span><span>$WIRE</span></div>
-        <div class="r"><span>CHAIN</span><span>Robinhood Chain</span></div>
-        <div class="r"><span>LAUNCHPAD</span><span>Pons</span></div>
-        <div class="ln"></div>
-        <div class="r"><span>CONTRACT</span><span id="stripState"></span></div>
-        <div class="ca" id="caAddr"></div>
-        <button class="copy" id="caCopy" type="button">[ COPY ]</button>
-      </div>
+    <div class="flapboard" id="flapboard" role="button" tabindex="0" aria-label="Copy contract address">
+      <div class="cap">$WIRE contract · Robinhood Chain · Pons</div>
+      <div class="flaps" id="flaps"></div>
+      <button class="cp" id="cp" type="button">[ COPY ]</button>
     </div>
   </section>
 
@@ -250,19 +238,41 @@ $('buyLink').href = CA ? 'https://www.ponsfamily.com/launchpad/' + CA : window.P
 $('chartLink').href = CA ? 'https://dexscreener.com/robinhood/' + CA : window.DEX_HOME;
 if (addr(window.WIRE_OFFICE)) $('aOffice').textContent = window.WIRE_OFFICE;
 if (addr(window.WIRE_BURNER)) $('aBurner').textContent = window.WIRE_BURNER;
-$('caAddr').textContent = CA || 'soon';
-$('caAddr').classList.toggle('soon', !CA);
-$('stripState').textContent = CA ? 'live' : 'not launched yet';
+const still = matchMedia('(prefers-reduced-motion: reduce)');
+const ALPHA = '0123456789ABCDEFabcdefx';
+(function buildFlaps(text, soon) {
+  const host = $('flaps');
+  const cells = [...text].map(ch => {
+    const el = document.createElement('div');
+    el.className = 'flap' + (soon ? ' soon' : '');
+    el.textContent = still.matches ? ch : ' ';
+    host.appendChild(el);
+    return { el, ch };
+  });
+  if (still.matches) return;
+  const io = new IntersectionObserver(es => {
+    if (!es.some(e => e.isIntersecting)) return;
+    io.disconnect();
+    cells.forEach((c, i) => {
+      let ticks = 6 + i * 2;
+      const t = setInterval(() => {
+        c.el.textContent = ALPHA[Math.floor(Math.random() * ALPHA.length)];
+        if (--ticks <= 0) { clearInterval(t); c.el.textContent = c.ch; }
+      }, 45);
+    });
+  }, { threshold: .4 });
+  io.observe($('flapboard'));
+})(CA || 'SOON', !CA);
 async function copyCA(e) {
   if (e) e.stopPropagation();
-  const b = $('caCopy');
+  const b = $('cp');
   if (!CA) b.textContent = '[ NOT YET ]';
   else { try { await navigator.clipboard.writeText(CA); b.textContent = '[ COPIED ]'; } catch { b.textContent = '[ COPY FAILED ]'; } }
   setTimeout(() => b.textContent = '[ COPY ]', 1400);
 }
-$('caCopy').onclick = copyCA;
-$('strip').addEventListener('click', e => { if (!e.target.closest('a')) copyCA(); });
-$('strip').addEventListener('keydown', e => { if (e.key === 'Enter') copyCA(); });
+$('cp').onclick = copyCA;
+$('flapboard').addEventListener('click', e => { if (!e.target.closest('a')) copyCA(); });
+$('flapboard').addEventListener('keydown', e => { if (e.key === 'Enter') copyCA(); });
 
 const links = [...document.querySelectorAll('nav.toc a')];
 const spy = new IntersectionObserver(es => {
