@@ -5,7 +5,7 @@
 <script src="/config.js"></script>
 <title>Wire Office</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Wire Office: every X handle has a delivery address on Robinhood Chain. Patch a Pons coin to a handle and its creator fee arrives in dollars">
+<meta name="description" content="Wire Office: every X handle has a delivery address on Robinhood Chain. Point a Pons coin's creator fee at it and the money arrives in dollars">
 <meta property="og:title" content="Wire Office">
 <meta property="og:image" content="/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -13,196 +13,227 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a1524;--deep:#050b14;--panel:#10203a;--panel2:#16294a;--line:#24406a;--ink:#e9eff8;--dim:#93a8c6;--brass:#d9a441;--brass2:#f3cd7c;--lamp:#ffcf7a;--paper:#efe8d6;--bad:#ff8f8f;--d:'Bodoni Moda',Georgia,serif;--m:'Courier Prime',ui-monospace,monospace}
+:root{--bg:#0a0a0a;--card:#0f0f10;--card2:#151517;--line:#1f2228;--ink:#f2f3f5;--dim:#8b8f98;--brass:#d9a441;--brass2:#f3cd7c;--bad:#ff6b6b;--s:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;--m:'JetBrains Mono',ui-monospace,monospace}
 *{box-sizing:border-box}
-html{overflow-x:hidden;scroll-behavior:smooth;scroll-snap-type:y proximity}
-body{margin:0;background:var(--deep);color:var(--ink);font:14px/1.7 var(--m)}
-/* every layer is a full screen of its own and fades into the same deep tone at its edges,
-   so one never cuts into the next with a hard change of colour */
-.edge{position:absolute;left:0;right:0;height:24vh;z-index:0;pointer-events:none}
-.edge.top{top:0;background:linear-gradient(180deg,var(--deep),rgba(5,11,20,0))}
-.edge.bot{bottom:0;background:linear-gradient(0deg,var(--deep),rgba(5,11,20,0))}
+html{overflow-x:hidden}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--s);-webkit-font-smoothing:antialiased}
 [hidden]{display:none!important}
 a{color:inherit}
 img{max-width:100%;display:block}
 button,input{font:inherit;color:inherit}
-.wrap{width:min(1180px,100%);margin:0 auto;padding:0 max(16px,env(safe-area-inset-left))}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 16px;border-radius:3px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:400 12px var(--m);letter-spacing:.11em;text-transform:uppercase;cursor:pointer;text-decoration:none;white-space:nowrap}
-.btn:hover{border-color:var(--brass);color:var(--brass2)}
-.btn.brass{background:linear-gradient(180deg,#e7b959,#c08d2b);border-color:#e7b959;color:#1a1204;font-weight:700}
-.btn.sm{height:32px;padding:0 11px;font-size:10.5px}
-.btn:disabled{opacity:.4;cursor:not-allowed}
-.top{position:fixed;top:0;left:0;right:0;z-index:30;background:linear-gradient(180deg,rgba(5,11,20,.95),rgba(5,11,20,.6) 70%,transparent);padding-top:env(safe-area-inset-top,0px)}
-.top .wrap{display:flex;align-items:center;gap:16px;height:60px}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
-.brand img{width:30px;height:30px;border-radius:3px}
-.brand b{font:600 21px/1 var(--d);letter-spacing:.06em;white-space:nowrap}
-.top .r{margin-left:auto;display:flex;gap:8px;align-items:center}
-.icon{width:32px;height:32px;border-radius:3px;border:1px solid var(--line);display:grid;place-items:center}
-.icon:hover{border-color:var(--brass)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:38px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:var(--card2);color:var(--ink);font:600 13.5px var(--s);cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn:hover{border-color:#31343c}
+.btn.brass{background:var(--brass);border-color:var(--brass);color:#1a1204}
+.btn.brass:hover{background:var(--brass2)}
+.btn.sm{height:32px;padding:0 13px;font-size:12.5px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
 
-/* ---------------------------------------------------------------- the hall: one room, everything happens in it */
-.hall{position:relative;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;overflow:hidden;scroll-snap-align:start}
-.hall .bg{position:absolute;inset:0;z-index:0}
-.hall .bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.62) saturate(.9)}
-.hall .bg::after{content:"";position:absolute;inset:0;background:radial-gradient(110% 80% at 50% 38%,rgba(5,11,20,.35) 0%,rgba(5,11,20,.78) 60%,rgba(5,11,20,.95) 100%)}
-.hall .in{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;padding:84px 0 0}
+/* shell: sidebar + content, the way an app is laid out */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh;min-height:100svh}
+.side{border-right:1px solid var(--line);padding:18px 14px;display:flex;flex-direction:column;gap:22px;position:sticky;top:0;height:100vh;height:100svh}
+.side .logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;padding:4px 8px}
+.side .logo img{width:28px;height:28px;border-radius:8px}
+.side nav{display:grid;gap:2px}
+.side nav a{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:10px;text-decoration:none;color:var(--dim);font-size:14px;font-weight:500}
+.side nav a:hover{background:var(--card2);color:var(--ink)}
+.side nav a.on{background:var(--card2);color:var(--ink)}
+.side nav svg{opacity:.75;flex:none}
+.side .foot{margin-top:auto;border-top:1px solid var(--line);padding-top:14px;display:flex;align-items:center;gap:10px}
+.side .foot img{width:30px;height:30px;border-radius:8px}
+.side .foot b{display:block;font-size:13.5px}
+.side .foot small{color:var(--dim);font-size:12.5px}
+.side .foot a{margin-left:auto;color:var(--dim)}
 
-.title{text-align:center;padding:6px 0 14px}
-.title h1{margin:0;font:400 clamp(30px,5.2vw,58px)/1.02 var(--d);letter-spacing:.01em;text-shadow:0 2px 30px rgba(0,0,0,.8)}
-.title h1 em{font-style:italic;color:var(--brass2)}
-.title p{margin:10px auto 0;color:#c8d7e9;max-width:56ch;font-size:13.5px;text-shadow:0 1px 14px rgba(0,0,0,.9)}
+.main{min-width:0;display:flex;flex-direction:column}
+.bar{display:flex;align-items:center;gap:10px;padding:14px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(10,10,10,.86);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:20}
+.search{flex:1;max-width:520px;display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:999px;background:var(--card);padding:0 15px;height:38px}
+.search input{flex:1;border:0;background:none;outline:0;min-width:0;font-size:14px}
+.search svg{opacity:.5;flex:none}
+.bar .r{margin-left:auto;display:flex;gap:8px}
+.page{padding:22px;display:grid;gap:14px;max-width:1120px;width:100%}
 
-/* the switchboard */
-.board{flex:1;display:grid;grid-template-columns:1fr minmax(0,560px) 1fr;gap:18px;align-items:center;padding:10px 0 0}
-.jacks{display:flex;flex-direction:column;gap:10px}
-.jacks h3{margin:0 0 2px;font:400 10px var(--m);letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
-.jack{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:3px;background:rgba(16,32,58,.82);padding:9px 11px;cursor:grab;touch-action:none;min-width:0}
-.jack:hover{border-color:var(--brass)}
-.jack.on{border-color:var(--brass);box-shadow:0 0 0 1px rgba(217,164,65,.35),0 0 22px rgba(255,207,122,.18)}
-.jack.armed{border-color:var(--brass2);box-shadow:0 0 0 2px rgba(243,205,124,.4)}
-.jack .hole{width:17px;height:17px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#2a3b56,#070d16 70%);border:2px solid #b8903f;flex:none;position:relative}
-.jack.on .hole{background:radial-gradient(circle at 50% 50%,var(--lamp),#8a5a12 70%);box-shadow:0 0 14px rgba(255,207,122,.75)}
-.jack .t{min-width:0}
-.jack .t b{display:block;font-weight:400;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.jack .t small{display:block;color:var(--dim);font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.jacks.right .jack{flex-direction:row-reverse;text-align:right}
-svg.wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
-svg.wires path{fill:none;stroke-linecap:round}
-.hint{text-align:center;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);padding:6px 0 0}
-.hint b{color:var(--brass2);font-weight:400}
+.card{border:1px solid var(--line);border-radius:22px;background:var(--card);padding:22px}
+.card.tight{padding:0;overflow:hidden}
+h1{margin:0 0 8px;font:700 clamp(26px,3.6vw,34px)/1.15 var(--s);letter-spacing:-.025em}
+h2{margin:0;font:700 20px var(--s);letter-spacing:-.02em}
+p.lede{margin:0;color:var(--dim);font-size:14.5px;max-width:74ch}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.sect{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:8px 2px 0}
+.sect a{color:var(--dim);text-decoration:none;font-size:13.5px}
+.sect a:hover{color:var(--ink)}
 
-/* the clerk window: type a handle, get its address */
-.w1{border:1px solid var(--line);border-radius:3px;background:linear-gradient(180deg,rgba(22,41,74,.94),rgba(12,24,44,.94));box-shadow:0 26px 60px rgba(0,0,0,.55);overflow:hidden;width:min(100%,380px);margin:0 auto}
-.w1 .h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);background:rgba(5,11,20,.55)}
-.w1 .h b{font:400 15px var(--d);letter-spacing:.06em}
-.w1 .h span{font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
-.w1 .b{padding:13px 14px 14px}
-.at{display:flex;align-items:center;border:1px solid var(--line);border-radius:3px;background:var(--deep);padding-left:11px}
-.at span{color:var(--brass);font-size:15px}
-.at input{flex:1;height:42px;border:0;background:none;outline:0;padding:0 10px;min-width:0;font-size:15px}
-.res{margin-top:11px;min-height:64px}
-.res .k{font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
-.res .a{font-size:clamp(10px,2.4vw,12.5px);word-break:break-all;color:var(--brass2);margin-top:4px;line-height:1.55}
-.res .n{font-size:11.5px;color:var(--dim);margin-top:7px}
-.res .err{color:var(--bad);font-size:12px}
-.w1 .acts{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat{border:1px solid var(--line);border-radius:16px;background:var(--card);padding:16px 18px}
+.stat span{display:block;font-size:12px;color:var(--dim);margin-bottom:6px}
+.stat b{font:700 24px var(--s);letter-spacing:-.025em}
+.stat b em{font-style:normal;font-size:13px;color:var(--dim);font-weight:500;margin-left:5px}
 
-/* the paper tape running along the bottom of the hall */
-/* the tape is an object lying in the room, not the start of another page: it keeps its shadow and
-   there is dark floor under it before the layer ends */
-.tape{position:relative;z-index:1;background:var(--paper);color:#241f16;margin:14px 0 0;box-shadow:0 -22px 46px rgba(0,0,0,.7),0 10px 30px rgba(0,0,0,.55)}
-.tape .strip{display:flex;gap:26px;align-items:center;padding:9px 14px;font-size:12px;white-space:nowrap;overflow:hidden;min-height:38px}
-.tape .strip span{flex:none;letter-spacing:.04em}
-.tape .strip span b{font-weight:700}
-.floor{position:relative;z-index:1;height:clamp(44px,9vh,96px);background:linear-gradient(180deg,rgba(5,11,20,.55),var(--deep))}
-.tape .perf{display:flex;justify-content:space-between;padding:0 8px 4px;opacity:.5}
-.tape .perf i{width:5px;height:5px;border-radius:50%;background:#241f16;display:block}
+/* the lookup: the one tool the whole product is about */
+.look{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.field{display:flex;align-items:center;border:1px solid var(--line);border-radius:12px;background:#0c0c0d;padding:0 14px;height:46px}
+.field span{color:var(--brass);font-weight:600}
+.field input{flex:1;border:0;background:none;outline:0;padding:0 9px;min-width:0;font-size:15px}
+.field:focus-within{border-color:var(--brass)}
+.out{margin-top:13px;border:1px solid var(--line);border-radius:14px;background:#0c0c0d;padding:14px}
+.out .k{font-size:12px;color:var(--dim);margin-bottom:6px}
+.out .a{font:500 13.5px var(--m);word-break:break-all;color:var(--brass2)}
+.out .n{font-size:13px;color:var(--dim);margin-top:9px}
+.out .err{color:var(--bad);font-size:13.5px}
+.acts{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
 
-/* ---------------------------------------------------------------- the wall of boxes */
-.wall{position:relative;min-height:100vh;min-height:100svh;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;padding:92px 0 64px;background:linear-gradient(180deg,var(--deep),#0b1727 48%,var(--deep))}
-.wall h2{margin:0 0 4px;font:400 clamp(24px,3.6vw,36px) var(--d)}
-.wall p.s{margin:0 0 20px;color:var(--dim);font-size:13px}
-.cells{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
-.cell{display:block;text-decoration:none;border:1px solid var(--line);border-radius:3px;background:linear-gradient(180deg,#152743,#0e1c31);padding:12px;position:relative}
-.cell:hover{border-color:var(--brass)}
-.cell::before{content:"";position:absolute;left:12px;top:12px;width:9px;height:9px;border-radius:50%;background:#0a1220;border:1px solid #3d5madd;border:1px solid #3d5a8a}
-.cell.paid::before{background:var(--lamp);box-shadow:0 0 10px rgba(255,207,122,.7);border-color:#b8903f}
-.cell b{display:block;margin-left:19px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cell .v{margin-top:10px;font:400 22px var(--d);color:var(--brass2)}
-.cell small{color:var(--dim);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase}
-.empty{grid-column:1/-1;border:1px dashed var(--line);border-radius:3px;padding:30px;text-align:center;color:var(--dim)}
+.rows{border:1px solid var(--line);border-radius:22px;background:var(--card);overflow:hidden}
+.row{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(2,minmax(0,1fr)) auto;gap:14px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);text-decoration:none}
+.row:last-child{border-bottom:0}
+.row:hover{background:var(--card2)}
+.row .who{display:flex;align-items:center;gap:11px;min-width:0}
+.row .who img{width:34px;height:34px;border-radius:999px;background:var(--card2);flex:none}
+.row .who b{font-weight:600;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .who small{display:block;color:var(--dim);font-size:12.5px;font-family:var(--m)}
+.row .c span{display:block;font-size:11.5px;color:var(--dim);margin-bottom:2px}
+.row .c b{font-weight:600;font-size:14.5px}
+.chip{font:600 11.5px var(--s);border-radius:999px;padding:4px 10px;border:1px solid var(--line);color:var(--dim);white-space:nowrap}
+.chip.on{color:var(--brass2);border-color:rgba(217,164,65,.45);background:rgba(217,164,65,.09)}
+.empty{padding:40px 18px;text-align:center;color:var(--dim);font-size:14px}
 
-/* ---------------------------------------------------------------- the split flap board */
-.flapwrap{position:relative;min-height:100vh;min-height:100svh;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;padding:92px 0 70px;text-align:center;background:radial-gradient(80% 60% at 50% 45%,#101f33 0%,var(--deep) 72%)}
-.flapboard{display:inline-block;max-width:100%;background:linear-gradient(180deg,#1b1a17,#0d0c0a);border:1px solid #3a3730;border-radius:4px;padding:16px 16px 14px;box-shadow:0 26px 60px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.05)}
-.flapboard .cap{font:400 10px var(--m);letter-spacing:.3em;text-transform:uppercase;color:#8b8577;margin-bottom:11px}
-.flaps{display:flex;gap:2px;justify-content:center;flex-wrap:nowrap;max-width:100%}
-.flap{flex:1 1 auto;min-width:0;height:34px;background:linear-gradient(180deg,#26241f 0 49%,#1a1815 51% 100%);border-radius:2px;display:grid;place-items:center;font:700 clamp(8px,1.6vw,15px)/1 var(--m);color:#f0e6cf;position:relative;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(0,0,0,.6)}
-.flap::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.55)}
-.flap.soon{height:54px;font-size:clamp(20px,5vw,34px);font-family:var(--d);font-weight:400;letter-spacing:.1em}
-.flapwrap .acts{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
-.flapwrap .cp{background:none;border:0;color:var(--brass2);font:400 11px var(--m);letter-spacing:.2em;cursor:pointer;margin-top:12px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.step{border:1px solid var(--line);border-radius:16px;background:var(--card);padding:16px}
+.step .n{font:600 12px var(--m);color:var(--brass);margin-bottom:8px}
+.step h3{margin:0 0 5px;font:600 15px var(--s)}
+.step p{margin:0;color:var(--dim);font-size:13.5px}
 
-@media (max-width:1040px){.board{grid-template-columns:1fr;gap:12px;padding-bottom:10px}.jacks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.jacks h3{display:none}.jack{padding:8px 9px;min-width:0}.jack .t small{display:none}.jacks.right .jack{flex-direction:row;text-align:left}.w1{order:-1}}
-@media (max-width:420px){.jack{padding:7px}.jack .hole{width:14px;height:14px}.jack .t b{font-size:11px}}
-@media (max-width:620px){.brand b{font-size:18px}#buyTop{display:none}.hall .in{padding-top:74px}}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+.addr{font:500 13px var(--m);word-break:break-all;background:#0c0c0d;border:1px solid var(--line);border-radius:12px;padding:12px 13px}
+.addr.soon{color:var(--dim);letter-spacing:.08em}
+.kv{display:grid;gap:0;margin-top:4px}
+.kv div{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}
+.kv div:last-child{border-bottom:0}
+.kv span{color:var(--dim)}
+.kv b{font-weight:600;text-align:right}
+.note{margin:12px 0 0;color:var(--dim);font-size:13px}
+.err{color:var(--bad);font-size:13.5px;min-height:19px;margin-top:8px}
+.pagefoot{color:var(--dim);font-size:13px;padding:4px 2px 30px}
+
+@media (max-width:1000px){.shell{grid-template-columns:1fr}.side{position:static;height:auto;flex-direction:row;align-items:center;gap:14px;border-right:0;border-bottom:1px solid var(--line);padding:12px 16px;overflow-x:auto}.side nav{grid-auto-flow:column;gap:4px}.side .foot{display:none}.stats{grid-template-columns:repeat(2,1fr)}.look{grid-template-columns:1fr}.steps{grid-template-columns:repeat(2,1fr)}.row{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) auto}.row .c.hide{display:none}}
+@media (max-width:620px){.page{padding:16px}.steps{grid-template-columns:1fr}.bar{padding:12px 16px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap">
-  <a class="brand" href="/"><img src="/assets/favicon.png" alt=""><b>Wire Office</b></a>
-  <div class="r">
-    <a class="btn sm" href="/docs">Docs</a>
-    <a class="icon" id="xTop" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
-    <a class="btn sm" id="buyTop" target="_blank" rel="noopener">Buy $WIRE</a>
-    <button class="btn sm brass" id="connect">Connect</button>
-  </div>
-</div></header>
+<div class="shell">
+  <aside class="side">
+    <a class="logo" href="/"><img src="/assets/favicon.png" alt="">Wire Office</a>
+    <nav>
+      <a class="on" href="/"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</a>
+      <a href="#handles"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>Handles</a>
+      <a href="#lookup"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Lookup</a>
+      <a href="#fees"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/></svg>Fees</a>
+      <a href="/docs"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v6h6"/></svg>Docs</a>
+    </nav>
+    <div class="foot">
+      <img src="/assets/favicon.png" alt="">
+      <div><b>Wire Office</b><small id="xHandleSide">@wireoffice</small></div>
+      <a id="xSide" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24" width="13" height="13"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+    </div>
+  </aside>
 
-<section class="hall" id="hall">
-  <div class="bg"><img src="/assets/video/hero-still.jpg" alt=""></div>
-  <svg class="wires" id="wires" aria-hidden="true"></svg>
-  <div class="in">
-    <div class="wrap title">
-      <h1>Patch a coin to a <em>handle</em></h1>
-      <p>Every X handle already has an address here. Point a Pons coin's creator fee at it and the money arrives in dollars, on its own</p>
+  <div class="main">
+    <div class="bar">
+      <label class="search" for="find">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="find" placeholder="Look up an X handle" autocomplete="off" spellcheck="false" maxlength="15" aria-label="Look up an X handle">
+      </label>
+      <div class="r">
+        <a class="btn sm" id="buyTop" target="_blank" rel="noopener">Buy $WIRE</a>
+        <button class="btn sm brass" id="connect">Connect wallet</button>
+      </div>
     </div>
 
-    <div class="wrap board" id="boardWrap">
-      <div class="jacks left" id="jacksL"><h3>Coins</h3></div>
-
-      <div class="w1">
-        <div class="h"><b>Delivery address</b><span>Form W-1</span></div>
-        <div class="b">
-          <label class="at" for="find"><span>@</span><input id="find" placeholder="handle" autocomplete="off" spellcheck="false" maxlength="15" aria-label="X handle"></label>
-          <div class="res" id="res">
-            <div class="k">Address on Robinhood Chain</div>
-            <div class="a" id="resAddr">Type a handle</div>
-            <div class="n" id="resNote">It is worked out from the handle itself, so it exists before anything is deployed</div>
+    <div class="page">
+      <div class="card">
+        <div class="head">
+          <div>
+            <h1>Every X handle already has a delivery address</h1>
+            <p class="lede">Point a Pons coin's creator fee at it and the money arrives on its own. Wire Office claims it on chain, turns it into USDG and holds it until the handle proves it is the handle. We launch nothing and take no cut of a launch.</p>
           </div>
-          <div class="acts">
-            <button class="btn sm" id="copyAddr" disabled>Copy</button>
-            <a class="btn sm brass" id="openBox" href="#" hidden>Open the box</a>
-          </div>
+          <a class="btn brass" href="#lookup">Find an address</a>
         </div>
       </div>
 
-      <div class="jacks right" id="jacksR"><h3>Handles</h3></div>
+      <div class="stats">
+        <div class="stat"><span>Delivered</span><b id="sWired">·</b></div>
+        <div class="stat"><span>Waiting to be claimed</span><b id="sWaiting">·</b></div>
+        <div class="stat"><span>Boxes open</span><b id="sBoxes">·</b></div>
+        <div class="stat"><span>Office fee</span><b>5<em>% burned</em></b></div>
+      </div>
+
+      <div class="sect" id="lookup"><h2>Lookup</h2><a href="/docs">How the address is derived →</a></div>
+      <div class="look">
+        <div class="card">
+          <p class="lede" style="margin-bottom:12px">An address is worked out from the handle itself, so it exists before anything is deployed.</p>
+          <label class="field" for="h2"><span>@</span><input id="h2" placeholder="handle" autocomplete="off" spellcheck="false" maxlength="15" aria-label="X handle"></label>
+          <div class="out" id="out">
+            <div class="k">Delivery address on Robinhood Chain</div>
+            <div class="a" id="outAddr">Type a handle</div>
+            <div class="n" id="outNote">Anyone launching a coin can set this as the creator fee recipient.</div>
+          </div>
+          <div class="acts">
+            <button class="btn sm" id="copyAddr" disabled>Copy address</button>
+            <a class="btn sm brass" id="openBox" href="#" hidden>Open the box</a>
+          </div>
+        </div>
+        <div class="card">
+          <p class="lede" style="margin-bottom:12px">Check where a coin actually pays. The chain is read directly; a coin that points somewhere else says so.</p>
+          <label class="field" for="coinIn"><input id="coinIn" placeholder="coin contract 0x…" autocomplete="off" spellcheck="false" aria-label="Coin contract"></label>
+          <div class="out" id="coinOut">
+            <div class="k">Creator fee recipient</div>
+            <div class="a" id="coinAddr">Paste a Pons coin address</div>
+            <div class="n" id="coinNote">Reads getLaunchedToken on the Pons factory.</div>
+          </div>
+          <div class="acts"><button class="btn sm" id="coinGo">Check the coin</button></div>
+        </div>
+      </div>
+
+      <div class="sect" id="handles"><h2>Boxes</h2><span class="chip" id="boxCount">·</span></div>
+      <div class="rows" id="list"><div class="empty">Reading the chain</div></div>
+
+      <div class="sect" id="fees"><h2>How it works</h2><a href="/docs">Docs →</a></div>
+      <div class="steps">
+        <div class="step"><div class="n">01</div><h3>Address</h3><p>Read the delivery address of a handle. It is derived from the handle, identical for everyone and cannot be swapped.</p></div>
+        <div class="step"><div class="n">02</div><h3>Point</h3><p>Launch on Pons with that address as the creator fee recipient. Any launcher, any coin, no permission from us.</p></div>
+        <div class="step"><div class="n">03</div><h3>Wire</h3><p>Anyone can run a box: it sweeps the curve, claims the escrow, keeps 5% for the $WIRE burn and turns the rest into USDG.</p></div>
+        <div class="step"><div class="n">04</div><h3>Claim</h3><p>The handle posts a code, the oracle signs it, and after 48 hours the dollars go to that wallet, now and on every later wire.</p></div>
+      </div>
+
+      <div class="sect"><h2>Proof</h2><span class="chip">Robinhood Chain · 4663</span></div>
+      <div class="look">
+        <div class="card">
+          <h2 style="font-size:16px;margin-bottom:6px">$WIRE</h2>
+          <p class="lede" style="margin-bottom:12px">What the office fee buys and burns. No tax of its own, no privileges in the protocol.</p>
+          <div class="addr" id="caAddr">soon</div>
+          <div class="acts">
+            <button class="btn sm" id="caCopy">Copy</button>
+            <a class="btn sm brass" id="buyLink" target="_blank" rel="noopener">Buy on Pons</a>
+            <a class="btn sm" id="chartLink" target="_blank" rel="noopener">Chart</a>
+          </div>
+        </div>
+        <div class="card">
+          <h2 style="font-size:16px;margin-bottom:6px">The contracts</h2>
+          <div class="kv">
+            <div><span>Office</span><b id="aOffice" style="font-family:var(--m);font-size:12.5px">not deployed</b></div>
+            <div><span>Burner</span><b id="aBurner" style="font-family:var(--m);font-size:12.5px">not deployed</b></div>
+            <div><span>Paid in</span><b>USDG</b></div>
+            <div><span>Claim delay</span><b>48 hours</b></div>
+            <div><span>Pause switch</span><b>none, by design</b></div>
+          </div>
+          <p class="note">The guardian can only cancel a pending binding and rotate the oracle after a public 48 hour notice. It cannot touch a box.</p>
+        </div>
+      </div>
+
+      <div class="pagefoot">Wire Office is an independent project on Robinhood Chain and is not affiliated with X Corp.</div>
     </div>
-
-    <div class="hint" id="hint">Drag a cord from a coin to a handle</div>
   </div>
-
-  <div class="tape">
-    <div class="strip" id="tape"><span>Wire Office · the line is quiet</span></div>
-    <div class="perf" id="perf"></div>
-  </div>
-  <div class="floor"></div>
-</section>
-
-<section class="wall"><div class="edge top"></div><div class="edge bot"></div><div class="wrap">
-  <h2>The wall</h2>
-  <p class="s">A box for every handle someone opened one for. A lit lamp means the handle has claimed it</p>
-  <div class="cells" id="cells"><div class="empty">Reading the chain</div></div>
-</div></section>
-
-<section class="flapwrap"><div class="edge top"></div><div class="wrap">
-  <div class="flapboard" id="flapboard" role="button" tabindex="0" aria-label="Copy contract address">
-    <div class="cap">$WIRE contract · Robinhood Chain</div>
-    <div class="flaps" id="flaps"></div>
-    <button class="cp" id="cp" type="button">[ COPY ]</button>
-    <div class="acts">
-      <a class="btn brass" id="buyLink" target="_blank" rel="noopener">Buy</a>
-      <a class="btn" id="xLink" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
-      <a class="btn" id="chartLink" target="_blank" rel="noopener">Chart</a>
-      <a class="btn" href="/docs">Docs</a>
-    </div>
-  </div>
-</div></section>
+</div>
 
 <script type="module">
 import * as W from '/lib/wallet.js';
@@ -211,219 +242,108 @@ import * as T from '/lib/wire.js';
 const $ = id => document.getElementById(id);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const S = window.SITE, CA = /^0x[0-9a-fA-F]{40}$/.test(S.CA) ? S.CA : null;
-const still = matchMedia('(prefers-reduced-motion: reduce)');
-let shown = null, boxes = [], coins = [];
+let shown = null, boxes = [], filter = '';
 
-$('xTop').href = $('xLink').href = S.X_URL;
+$('xSide').href = S.X_URL;
+$('xHandleSide').textContent = '@' + S.X_URL.split('/').pop();
 $('buyTop').href = $('buyLink').href = CA ? 'https://www.ponsfamily.com/launchpad/' + CA : window.PONS_HOME;
 $('chartLink').href = CA ? 'https://dexscreener.com/robinhood/' + CA : window.DEX_HOME;
+if (CA) $('caAddr').textContent = CA; else $('caAddr').classList.add('soon');
+if (T.OFFICE) $('aOffice').textContent = T.OFFICE;
+if (T.BURNER) $('aBurner').textContent = T.BURNER;
 
-/* ---------------------------------------------------------------- the split flap board */
-const ALPHA = '0123456789ABCDEFabcdefx';
-function buildFlaps(text, soon) {
-  const host = $('flaps');
-  host.innerHTML = '';
-  const cells = [...text].map(ch => {
-    const el = document.createElement('div');
-    el.className = 'flap' + (soon ? ' soon' : '');
-    el.textContent = still.matches ? ch : ' ';
-    host.appendChild(el);
-    return { el, ch };
-  });
-  if (still.matches) return;
-  let started = false;
-  const run = () => {
-    if (started) return;
-    started = true;
-    cells.forEach((c, i) => {
-      let ticks = 6 + i * 2;
-      const t = setInterval(() => {
-        c.el.textContent = ALPHA[Math.floor(Math.random() * ALPHA.length)];
-        if (--ticks <= 0) { clearInterval(t); c.el.textContent = c.ch; }
-      }, 45);
-    });
-  };
-  const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { run(); io.disconnect(); } }, { threshold: .35 });
-  io.observe($('flapboard'));
-  /* a board that never fills in is worse than one that fills in early */
-  setTimeout(() => { const r = $('flapboard').getBoundingClientRect(); if (r.top < innerHeight * 1.5) { run(); io.disconnect(); } }, 2500);
-}
-buildFlaps(CA || 'SOON', !CA);
-async function copyCA(e) {
-  if (e) e.stopPropagation();
-  const b = $('cp');
-  if (!CA) b.textContent = '[ NOT YET ]';
-  else { try { await navigator.clipboard.writeText(CA); b.textContent = '[ COPIED ]'; } catch { b.textContent = '[ COPY FAILED ]'; } }
-  setTimeout(() => b.textContent = '[ COPY ]', 1400);
-}
-$('cp').onclick = copyCA;
-$('flapboard').addEventListener('click', e => { if (!e.target.closest('a')) copyCA(); });
-$('flapboard').addEventListener('keydown', e => { if (e.key === 'Enter') copyCA(); });
-
-/* ---------------------------------------------------------------- the paper tape */
-const tapeLines = [];
-function tape(line) {
-  tapeLines.unshift(line);
-  if (tapeLines.length > 14) tapeLines.pop();
-  $('tape').innerHTML = tapeLines.map(l => `<span>${l}</span>`).join('');
-}
-function perf() {
-  const n = Math.min(90, Math.max(20, Math.round(innerWidth / 16)));
-  $('perf').innerHTML = '<i></i>'.repeat(n);
-}
-perf();
-addEventListener('resize', perf);
-
-/* ---------------------------------------------------------------- the switchboard */
-const EXAMPLES = {
-  coins: [{ name: 'a coin on Pons', sym: 'ANY', handle: null }, { name: 'another coin', sym: 'ANY', handle: null }, { name: 'a third coin', sym: 'ANY', handle: null }],
-  handles: ['vladtenev', 'elonmusk', 'ponsfamily']
+$('caCopy').onclick = async () => {
+  const b = $('caCopy');
+  if (!CA) b.textContent = 'Not launched yet';
+  else { try { await navigator.clipboard.writeText(CA); b.textContent = 'Copied'; } catch { b.textContent = 'Copy failed'; } }
+  setTimeout(() => b.textContent = 'Copy', 1500);
 };
-function jack(side, label, sub, key) {
-  const el = document.createElement('div');
-  el.className = 'jack';
-  el.dataset.side = side;
-  el.dataset.key = key;
-  el.innerHTML = `<span class="hole"></span><span class="t"><b>${esc(label)}</b><small>${esc(sub)}</small></span>`;
-  return el;
-}
-function paintJacks() {
-  const L = $('jacksL'), R = $('jacksR');
-  L.innerHTML = '<h3>Coins</h3>';
-  R.innerHTML = '<h3>Handles</h3>';
-  const cs = coins.length ? coins.slice(0, 4) : EXAMPLES.coins;
-  const hs = boxes.length ? boxes.slice(0, 4).map(b => b.handle) : EXAMPLES.handles;
-  cs.forEach((c, i) => L.appendChild(jack('coin', c.sym || c.symbol || 'COIN', c.name || 'Pons coin', String(i))));
-  hs.forEach((h, i) => R.appendChild(jack('handle', '@' + h, 'delivery address', String(i))));
-}
 
-let drag = null;
-const svg = $('wires');
-const patched = [];
-const centreOf = el => {
-  const hole = el.querySelector('.hole').getBoundingClientRect();
-  const host = $('hall').getBoundingClientRect();
-  return { x: hole.left - host.left + hole.width / 2, y: hole.top - host.top + hole.height / 2 };
-};
-function draw() {
-  const parts = patched.map(p => {
-    const a = centreOf(p.from), b = centreOf(p.to);
-    const sag = Math.max(26, Math.abs(b.x - a.x) * .22);
-    return `<path d="M${a.x},${a.y} Q${(a.x + b.x) / 2},${(a.y + b.y) / 2 + sag} ${b.x},${b.y}" stroke="#c99a3c" stroke-width="2.4" opacity=".92"/>`;
-  });
-  if (drag && drag.at) {
-    const a = centreOf(drag.from);
-    const sag = Math.max(18, Math.abs(drag.at.x - a.x) * .18);
-    parts.push(`<path d="M${a.x},${a.y} Q${(a.x + drag.at.x) / 2},${(a.y + drag.at.y) / 2 + sag} ${drag.at.x},${drag.at.y}" stroke="#8fa3c0" stroke-width="2" stroke-dasharray="5 5" opacity=".8"/>`);
-  }
-  svg.innerHTML = parts.join('');
-}
-function patch(from, to) {
-  if (patched.some(p => p.from === from && p.to === to)) return;
-  patched.push({ from, to });
-  if (patched.length > 4) patched.shift();
-  from.classList.add('on');
-  to.classList.add('on');
-  const coin = from.querySelector('b').textContent;
-  const handle = to.querySelector('b').textContent;
-  /* no invented amounts: the tape only ever states what is true */
-  tape(`${esc(coin)} → <b>${esc(handle)}</b> · creator fee now lands in this box`);
-  $('hint').innerHTML = `Patched. Every trade of that coin now pays <b>${esc(handle)}</b>`;
-  draw();
-}
-function jackUnder(x, y) {
-  const el = document.elementFromPoint(x, y);
-  return el && el.closest ? el.closest('.jack') : null;
-}
-/* two ways to do the same thing: drag a cord across, or tap one end then the other */
-let armed = null, moved = false;
-const armCoin = j => { if (armed) armed.classList.remove('armed'); armed = j; j.classList.add('armed'); $('hint').innerHTML = 'Now pick a <b>handle</b>'; };
-$('hall').addEventListener('pointerdown', e => {
-  const j = e.target.closest && e.target.closest('.jack');
-  if (!j || j.dataset.side !== 'coin') return;
-  const host = $('hall').getBoundingClientRect();
-  drag = { from: j, at: { x: e.clientX - host.left, y: e.clientY - host.top } };
-  moved = false;
-  draw();
-});
-addEventListener('pointermove', e => {
-  if (!drag) return;
-  moved = true;
-  const host = $('hall').getBoundingClientRect();
-  drag.at = { x: e.clientX - host.left, y: e.clientY - host.top };
-  draw();
-});
-addEventListener('pointerup', e => {
-  const t = jackUnder(e.clientX, e.clientY);
-  if (drag && moved) {
-    if (t && t.dataset.side === 'handle') patch(drag.from, t);
-    drag = null; draw(); return;
-  }
-  drag = null;
-  draw();
-  if (!t) return;
-  if (t.dataset.side === 'coin') armCoin(t);
-  else if (t.dataset.side === 'handle' && armed) { patch(armed, t); armed.classList.remove('armed'); armed = null; }
-});
-addEventListener('resize', draw);
-
-/* ---------------------------------------------------------------- the form */
+/* ---------------------------------------------------------------- handle lookup */
 let timer = null;
-async function lookup() {
-  const h = T.cleanHandle($('find').value);
+async function lookup(h) {
+  const set = (a, n, off) => { $('outAddr').innerHTML = a; $('outNote').innerHTML = n; $('copyAddr').disabled = off; };
   $('openBox').hidden = true;
-  const set = (addr, note, disabled) => { $('resAddr').innerHTML = addr; $('resNote').innerHTML = note; $('copyAddr').disabled = disabled; };
-  if (!h) { shown = null; return set('Type a handle', 'It is worked out from the handle itself, so it exists before anything is deployed', true); }
+  if (!h) { shown = null; return set('Type a handle', 'Anyone launching a coin can set this as the creator fee recipient.', true); }
   if (!T.validHandle(h)) { shown = null; return set('<span class="err">Letters, numbers and underscore, up to 15</span>', '', true); }
   if (!T.OFFICE) { shown = null; return set('Addresses appear once Wire Office is deployed', '', true); }
   try {
     const [addr, open] = await Promise.all([T.addressFor(h), T.isOpen(h)]);
-    if (T.cleanHandle($('find').value) !== h) return;
+    if (T.cleanHandle($('h2').value) !== h) return;
     shown = addr;
-    set(esc(addr), open ? `The box of <b>@${esc(h)}</b> is open` : 'Nobody opened this box yet. Money sent here waits until someone does', false);
+    set(esc(addr), open ? `The box of <b>@${esc(h)}</b> is open.` : 'Nobody opened this box yet. Money sent here waits until someone does, and anyone can.', false);
     $('openBox').hidden = false;
     $('openBox').href = '/@' + h;
     $('openBox').textContent = open ? 'See the box' : 'Open the box';
   } catch (e) { set('<span class="err">' + esc(e.shortMessage || e.message) + '</span>', '', true); }
 }
-$('find').addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(lookup, 200); });
-$('find').addEventListener('keydown', e => { if (e.key === 'Enter') { const h = T.cleanHandle($('find').value); if (T.validHandle(h)) location.href = '/@' + h; } });
+$('h2').addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(() => lookup(T.cleanHandle($('h2').value)), 200); });
+$('h2').addEventListener('keydown', e => { if (e.key === 'Enter') { const h = T.cleanHandle($('h2').value); if (T.validHandle(h)) location.href = '/@' + h; } });
 $('copyAddr').onclick = async () => {
   if (!shown) return;
   const b = $('copyAddr');
   try { await navigator.clipboard.writeText(shown); b.textContent = 'Copied'; } catch { b.textContent = 'Failed'; }
-  setTimeout(() => { b.textContent = 'Copy'; }, 1400);
+  setTimeout(() => { b.textContent = 'Copy address'; }, 1500);
 };
 
-/* ---------------------------------------------------------------- the wall */
+/* ---------------------------------------------------------------- coin check: read the chain, report what it says */
+$('coinGo').onclick = async () => {
+  const b = $('coinGo'), v = $('coinIn').value.trim();
+  const set = (a, n) => { $('coinAddr').innerHTML = a; $('coinNote').innerHTML = n; };
+  if (!T.isAddr(v)) return set('<span class="err">Paste a contract address</span>', '');
+  b.disabled = true;
+  try {
+    b.textContent = 'Reading the chain';
+    const [info, det] = await Promise.all([T.checkRecipient(v), T.coinDetails([v]).then(r => r[0]).catch(() => null)]);
+    const match = boxes.find(b => b.box.toLowerCase() === info.recipient.toLowerCase());
+    const label = det && det.symbol ? ` · ${esc(det.symbol)}, ${info.taxBps / 100}% creator tax` : '';
+    set(esc(info.recipient), match
+      ? `Pays <b>@${esc(match.handle)}</b>${label}. <a href="/@${esc(match.handle)}">Open that box</a>`
+      : `Not a box that is open here${label}. It may still be a delivery address whose box nobody opened yet, or it may pay somewhere else entirely.`);
+  } catch (e) { set('<span class="err">' + esc(e.shortMessage || e.message) + '</span>', ''); }
+  finally { b.disabled = false; b.textContent = 'Check the coin'; }
+};
+
+/* ---------------------------------------------------------------- boxes */
+function paint() {
+  const list = filter ? boxes.filter(b => b.handle.includes(filter)) : boxes;
+  if (!T.OFFICE) return void ($('list').innerHTML = '<div class="empty">Boxes appear here once Wire Office is deployed.</div>');
+  $('list').innerHTML = list.length ? list.map(b => {
+    const claimed = b.wallet && b.wallet !== T.ZERO;
+    return `<a class="row" href="/@${esc(b.handle)}">
+      <div class="who"><img src="https://unavatar.io/x/${esc(b.handle)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><div><b>@${esc(b.handle)}</b><small>${esc(T.short(b.box))}</small></div></div>
+      <div class="c"><span>In the box</span><b>${T.fmtUsd(T.usd(b.usdg))}</b></div>
+      <div class="c hide"><span>Delivered</span><b>${T.fmtUsd(T.usd(b.wired))}</b></div>
+      <span class="chip ${claimed ? 'on' : ''}">${claimed ? 'claimed' : 'unclaimed'}</span>
+    </a>`;
+  }).join('') : `<div class="empty">${filter ? 'No handle matches that search.' : 'No boxes yet. Look up a handle and open the first one.'}</div>`;
+}
+$('find').addEventListener('input', e => {
+  filter = T.cleanHandle(e.target.value);
+  paint();
+  $('h2').value = e.target.value;
+  clearTimeout(timer);
+  timer = setTimeout(() => lookup(filter), 250);
+});
+$('find').addEventListener('keydown', e => { if (e.key === 'Enter') { const h = T.cleanHandle($('find').value); if (T.validHandle(h)) location.href = '/@' + h; } });
+
 async function load() {
-  if (!T.OFFICE) {
-    $('cells').innerHTML = '<div class="empty">Boxes appear here once Wire Office is deployed</div>';
-    paintJacks();
-    return;
-  }
+  if (!T.OFFICE) { paint(); return; }
   try {
     const r = await T.loadAll();
     boxes = r.boxes;
-    $('cells').innerHTML = boxes.length ? boxes.map(b => {
-      const claimed = b.wallet && b.wallet !== T.ZERO;
-      return `<a class="cell ${claimed ? 'paid' : ''}" href="/@${esc(b.handle)}">
-        <b>@${esc(b.handle)}</b>
-        <div class="v">${T.fmtUsd(T.usd(b.usdg))}</div>
-        <small>${T.fmtUsd(T.usd(b.wired))} delivered</small>
-      </a>`;
-    }).join('') : '<div class="empty">No boxes yet. Look up a handle and open the first one</div>';
-    boxes.filter(b => b.wired > 0n).slice(0, 6).forEach(b => tape(`<b>${T.fmtUsd(T.usd(b.wired))}</b> · delivered to @${esc(b.handle)}`));
-    paintJacks();
-    draw();
+    $('sBoxes').textContent = boxes.length;
+    $('boxCount').textContent = boxes.length + (boxes.length === 1 ? ' handle' : ' handles');
+    $('sWired').textContent = T.fmtUsd(boxes.reduce((s, b) => s + T.usd(b.wired), 0));
+    $('sWaiting').textContent = T.fmtUsd(boxes.reduce((s, b) => s + T.usd(b.usdg), 0));
+    paint();
   } catch (e) {
-    $('cells').innerHTML = `<div class="empty">Could not read the office: ${esc(e.shortMessage || e.message)}</div>`;
-    paintJacks();
+    $('list').innerHTML = `<div class="empty">Could not read the office: ${esc(e.shortMessage || e.message)}</div>`;
   }
 }
 
 $('connect').onclick = () => W.connect().catch(e => alert(e.shortMessage || e.message));
-W.onChange(s => { $('connect').textContent = s.address ? T.short(s.address) : 'Connect'; });
+W.onChange(s => { $('connect').textContent = s.address ? T.short(s.address) : 'Connect wallet'; });
 W.restore();
 load();
 setInterval(() => { if (!document.hidden) load(); }, 30000);
