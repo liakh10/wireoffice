@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script src="/config.js"></script>
+<title>Wire Office</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Wire Office: every X handle has a delivery address on Robinhood Chain. Point a Pons coin's creator fee at it and the money arrives in dollars, waiting for the handle to claim it">
+<meta property="og:title" content="Wire Office">
+<meta property="og:image" content="/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/assets/favicon.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a1524;--deep:#060e1a;--panel:#10203a;--panel2:#16294a;--line:#24406a;--ink:#e9eff8;--dim:#93a8c6;--brass:#d9a441;--brass2:#f3cd7c;--tape:#efe8d6;--bad:#ff8f8f;--d:'Instrument Serif',Georgia,serif;--m:'Courier Prime',ui-monospace,monospace}
+*{box-sizing:border-box}
+html{overflow-x:hidden;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.7 var(--m)}
+[hidden]{display:none!important}
+a{color:inherit}
+img{max-width:100%;display:block}
+button,input{font:inherit;color:inherit}
+.wrap{width:min(1120px,100%);margin:0 auto;padding:0 max(16px,env(safe-area-inset-left))}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:42px;padding:0 18px;border-radius:4px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:400 12.5px var(--m);letter-spacing:.1em;text-transform:uppercase;cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn:hover{border-color:var(--brass);color:var(--brass2)}
+.btn.brass{background:linear-gradient(180deg,#e7b959,#c08d２b);background:linear-gradient(180deg,#e7b959,#c08d2b);border-color:#e7b959;color:#1a1204;font-weight:700}
+.btn.brass:hover{color:#1a1204}
+.btn.sm{height:34px;padding:0 12px;font-size:11px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(6,14,26,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:16px;height:62px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none}
+.brand img{width:32px;height:32px;border-radius:4px}
+.brand b{font:400 23px/1 var(--d);letter-spacing:.02em;white-space:nowrap}
+.top nav{display:flex;gap:18px;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase}
+.top nav a{text-decoration:none;color:var(--dim)}
+.top nav a:hover{color:var(--brass2)}
+.top .r{margin-left:auto;display:flex;gap:8px;align-items:center}
+.icon{width:34px;height:34px;border-radius:4px;border:1px solid var(--line);display:grid;place-items:center}
+.icon:hover{border-color:var(--brass)}
+
+.hero{position:relative;isolation:isolate;border-bottom:1px solid var(--line);min-height:calc(100vh - 62px);min-height:calc(100svh - 62px);display:flex;align-items:center}
+.heroBg{position:absolute;inset:0;z-index:-1;overflow:hidden;background:var(--deep)}
+.heroBg video,.heroBg img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;filter:brightness(1.1) saturate(1.05)}
+.heroBg::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 44%,rgba(6,14,26,.3) 0%,rgba(6,14,26,.66) 55%,rgba(6,14,26,.9) 100%),linear-gradient(180deg,rgba(6,14,26,.6) 0%,rgba(6,14,26,.3) 36%,rgba(10,21,36,.96) 100%)}
+.heroIn{width:100%;padding:clamp(64px,10vh,120px) 0 clamp(44px,8vh,90px);display:grid;grid-template-columns:1.02fr .98fr;gap:38px;align-items:center}
+.kicker{display:inline-block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--brass2);border:1px solid rgba(217,164,65,.38);border-radius:2px;padding:4px 11px;margin-bottom:20px}
+.hero h1{margin:0;font:400 clamp(38px,6.2vw,74px)/1 var(--d);letter-spacing:.005em;text-shadow:0 2px 34px rgba(0,0,0,.7)}
+.hero h1 em{font-style:italic;color:var(--brass2)}
+.hero p.lede{margin:18px 0 0;color:#c2d2e6;max-width:46ch;text-shadow:0 1px 16px rgba(0,0,0,.8)}
+.heroStats{display:flex;gap:26px;margin-top:26px;flex-wrap:wrap}
+.heroStats div span{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.heroStats div b{font:400 27px var(--d);color:var(--brass2)}
+
+/* the form: the one live thing on the page */
+.form{background:linear-gradient(180deg,rgba(22,41,74,.96),rgba(16,32,58,.96));border:1px solid var(--line);border-radius:5px;box-shadow:0 30px 70px rgba(0,0,0,.5);overflow:hidden}
+.form .fh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:13px 18px;border-bottom:1px solid var(--line);background:rgba(6,14,26,.5)}
+.form .fh b{font:400 17px var(--d);letter-spacing:.03em}
+.form .fh span{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.form .fb{padding:18px}
+.form label.l{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:7px}
+.at{display:flex;align-items:center;border:1px solid var(--line);border-radius:4px;background:var(--deep);padding-left:13px}
+.at span{color:var(--brass);font-size:17px}
+.at input{flex:1;height:48px;border:0;background:none;outline:0;padding:0 12px;min-width:0;font-size:16px;letter-spacing:.02em}
+.out{margin-top:16px;border:1px dashed var(--line);border-radius:4px;padding:14px;background:rgba(6,14,26,.55);min-height:96px}
+.out .k{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.out .addr{font-size:clamp(11px,2.6vw,14.5px);word-break:break-all;color:var(--brass2);margin-top:5px;line-height:1.5}
+.out .note{font-size:12px;color:var(--dim);margin-top:9px}
+.out .err{color:var(--bad);font-size:12.5px}
+.formActs{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+
+section.band{padding:62px 0;border-top:1px solid var(--line);scroll-margin-top:62px}
+.sh{display:flex;align-items:end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+.sh h2{margin:0;font:400 clamp(28px,4vw,44px)/1.08 var(--d)}
+.sh p{margin:0;color:var(--dim);max-width:52ch}
+.rows{border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.row{display:grid;grid-template-columns:minmax(0,1.6fr) 1fr 1fr auto;gap:14px;align-items:center;padding:13px 16px;border-bottom:1px solid rgba(36,64,106,.6);text-decoration:none;background:var(--panel)}
+.row:last-child{border-bottom:0}
+.row:hover{background:var(--panel2)}
+.row .who{display:flex;align-items:center;gap:11px;min-width:0}
+.row .who img{width:36px;height:36px;border-radius:50%;background:var(--deep);flex:none}
+.row .who b{font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .v{font:400 19px var(--d);color:var(--brass2)}
+.row .k{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+.row .tag{font-size:10px;letter-spacing:.11em;text-transform:uppercase;border:1px solid var(--line);border-radius:2px;padding:3px 9px;color:var(--dim);white-space:nowrap}
+.row .tag.paid{color:var(--brass2);border-color:rgba(217,164,65,.5)}
+.empty{padding:34px;text-align:center;color:var(--dim);background:var(--panel)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.steps div{padding:20px;border-right:1px solid rgba(36,64,106,.6);background:var(--panel)}
+.steps div:last-child{border-right:0}
+.steps b{font:400 13px var(--m);letter-spacing:.16em;color:var(--brass)}
+.steps h4{margin:9px 0 6px;font:400 20px var(--d)}
+.steps p{margin:0;font-size:12.5px;color:var(--dim)}
+
+/* the contract lives on a strip of telegraph tape */
+.tape{padding:78px 0 96px;border-top:1px solid var(--line)}
+.strip{width:min(640px,100%);margin:0 auto;background:var(--tape);color:#1d1a14;border-radius:2px;padding:24px 26px 28px;position:relative;box-shadow:0 26px 60px rgba(0,0,0,.5);cursor:pointer}
+.strip::before,.strip::after{content:"";position:absolute;top:0;bottom:0;width:15px;background-image:radial-gradient(circle at center,#0a1524 3.2px,transparent 3.4px);background-size:15px 21px;opacity:.85}
+.strip::before{left:0}
+.strip::after{right:0}
+.strip .in{padding:0 14px}
+.strip h3{margin:0;font:400 25px var(--d);text-align:center;letter-spacing:.04em}
+.strip .ln{border-top:1px dashed #b3aa93;margin:13px 0}
+.strip .r{display:flex;justify-content:space-between;gap:12px;font-size:12px;letter-spacing:.04em}
+.strip .ca{margin-top:14px;text-align:center;font-size:clamp(10px,2.5vw,15px);word-break:break-all;font-weight:700;letter-spacing:.02em}
+.strip .ca.soon{font:400 36px var(--d);letter-spacing:.14em}
+.strip .copy{display:block;margin:11px auto 0;background:none;border:0;color:#7a5a12;font:700 11px var(--m);letter-spacing:.18em;cursor:pointer}
+.strip .links{display:flex;gap:8px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+.strip .btn{height:36px;font-size:10.5px;color:#1d1a14;border-color:#c3b99f;background:#e3dbc6}
+.strip .btn.brass{color:#1a1204}
+
+@media (max-width:980px){.heroIn{grid-template-columns:1fr;gap:28px;padding:44px 0 40px}.steps{grid-template-columns:repeat(2,1fr)}.steps div:nth-child(2){border-right:0}.steps div:nth-child(1),.steps div:nth-child(2){border-bottom:1px solid rgba(36,64,106,.6)}.row{grid-template-columns:minmax(0,1.4fr) 1fr auto;gap:10px}.row .hideSm{display:none}}
+@media (max-width:620px){.top nav{display:none}.steps{grid-template-columns:1fr}.steps div{border-right:0;border-bottom:1px solid rgba(36,64,106,.6)}.brand b{font-size:19px}.row{grid-template-columns:minmax(0,1fr) auto}.heroStats{gap:16px}.heroStats div span{font-size:9px;letter-spacing:.1em}.heroStats div b{font-size:22px}#buyTop{display:none}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/"><img src="/assets/favicon.png" alt=""><b>Wire Office</b></a>
+  <nav><a href="#handles">Handles</a><a href="#how">How it works</a><a href="/docs">Docs</a></nav>
+  <div class="r">
+    <a class="icon" id="xTop" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+    <a class="btn sm" id="buyTop" target="_blank" rel="noopener">Buy $WIRE</a>
+    <button class="btn sm brass" id="connect">Connect</button>
+  </div>
+</div></header>
+
+<section class="hero">
+  <div class="heroBg">
+    <img src="/assets/video/hero-still.jpg" alt="" id="heroStill">
+  </div>
+  <div class="wrap heroIn">
+    <div>
+      <span class="kicker">On Robinhood Chain · paid in dollars</span>
+      <h1>Every X handle already has an <em>address here</em></h1>
+      <p class="lede">Point a Pons coin's creator fee at it and the money arrives on its own. We turn it into dollars and hold them until the handle proves it is the handle</p>
+      <div class="heroStats">
+        <div><span>Handles wired</span><b id="sHandles">·</b></div>
+        <div><span>Delivered</span><b id="sWired">·</b></div>
+        <div><span>Waiting to be claimed</span><b id="sWaiting">·</b></div>
+      </div>
+    </div>
+
+    <div class="form">
+      <div class="fh"><b>Delivery address</b><span>Form W-1</span></div>
+      <div class="fb">
+        <label class="l" for="find">X handle the fees are for</label>
+        <label class="at" for="find"><span>@</span><input id="find" placeholder="handle" autocomplete="off" spellcheck="false" maxlength="15"></label>
+        <div class="out" id="out">
+          <div class="k">Address on Robinhood Chain</div>
+          <div class="addr" id="outAddr">Type a handle and it appears here</div>
+          <div class="note" id="outNote">The address is worked out from the handle itself, so it exists before anyone deploys anything</div>
+        </div>
+        <div class="formActs">
+          <button class="btn brass" id="copyAddr" disabled>Copy the address</button>
+          <a class="btn" id="openBox" href="#" hidden>Open the box</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="handles"><div class="wrap">
+  <div class="sh"><h2>Handles</h2><p>Every box the office has opened, by the dollars that went through it</p></div>
+  <div class="rows" id="list"><div class="empty">Reading the chain</div></div>
+</div></section>
+
+<section class="band" id="how"><div class="wrap">
+  <div class="sh"><h2>How it works</h2><a class="btn sm" href="/docs">Docs</a></div>
+  <div class="steps">
+    <div><b>01</b><h4>Address</h4><p>Read the delivery address of a handle above. It is derived from the handle, so it is the same for everyone and cannot be swapped</p></div>
+    <div><b>02</b><h4>Point</h4><p>Launch a coin on Pons with that address as the creator fee recipient. Any launcher, any coin, no permission from us</p></div>
+    <div><b>03</b><h4>Wire</h4><p>Anyone can run the box: it sweeps the curve, claims the escrow, keeps 5% for the $WIRE burn and turns the rest into USDG</p></div>
+    <div><b>04</b><h4>Claim</h4><p>The handle posts a code, the oracle signs it, and after 48 hours the dollars go to that wallet, now and on every later wire</p></div>
+  </div>
+</div></section>
+
+<section class="tape"><div class="wrap">
+  <div class="strip" id="strip" role="button" tabindex="0" aria-label="Copy contract address">
+    <div class="in">
+      <h3>Wire Office</h3>
+      <div class="ln"></div>
+      <div class="r"><span>TICKER</span><span>$WIRE</span></div>
+      <div class="r"><span>CHAIN</span><span>Robinhood Chain</span></div>
+      <div class="r"><span>LAUNCHPAD</span><span>Pons</span></div>
+      <div class="r"><span>OFFICE FEE</span><span>5% of every wire, burned</span></div>
+      <div class="ln"></div>
+      <div class="r"><span>CONTRACT</span><span id="stripState"></span></div>
+      <div class="ca" id="caAddr"></div>
+      <button class="copy" id="caCopy" type="button">[ COPY ]</button>
+      <div class="links">
+        <a class="btn brass" id="buyLink" target="_blank" rel="noopener">Buy</a>
+        <a class="btn" id="xLink" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        <a class="btn" id="chartLink" target="_blank" rel="noopener">Chart</a>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<script type="module">
+import * as W from '/lib/wallet.js';
+import * as T from '/lib/wire.js';
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const S = window.SITE, CA = /^0x[0-9a-fA-F]{40}$/.test(S.CA) ? S.CA : null;
+let shown = null;
+
+$('xTop').href = $('xLink').href = S.X_URL;
+$('buyTop').href = $('buyLink').href = CA ? 'https://www.ponsfamily.com/launchpad/' + CA : window.PONS_HOME;
+$('chartLink').href = CA ? 'https://dexscreener.com/robinhood/' + CA : window.DEX_HOME;
+$('caAddr').textContent = CA || 'soon';
+$('caAddr').classList.toggle('soon', !CA);
+$('stripState').textContent = CA ? 'live' : 'not launched yet';
+async function copyCA(e) {
+  if (e) e.stopPropagation();
+  const b = $('caCopy');
+  if (!CA) b.textContent = '[ NOT YET ]';
+  else { try { await navigator.clipboard.writeText(CA); b.textContent = '[ COPIED ]'; } catch { b.textContent = '[ COPY FAILED ]'; } }
+  setTimeout(() => b.textContent = '[ COPY ]', 1400);
+}
+$('caCopy').onclick = copyCA;
+$('strip').addEventListener('click', e => { if (!e.target.closest('a')) copyCA(); });
+$('strip').addEventListener('keydown', e => { if (e.key === 'Enter') copyCA(); });
+
+/* the form: a handle in, its delivery address out */
+let timer = null;
+async function lookup() {
+  const h = T.cleanHandle($('find').value);
+  $('openBox').hidden = true;
+  if (!h) {
+    shown = null;
+    $('outAddr').textContent = 'Type a handle and it appears here';
+    $('outNote').textContent = 'The address is worked out from the handle itself, so it exists before anyone deploys anything';
+    $('copyAddr').disabled = true;
+    return;
+  }
+  if (!T.validHandle(h)) {
+    shown = null;
+    $('outAddr').innerHTML = '<span class="err">Letters, numbers and underscore, up to 15</span>';
+    $('outNote').textContent = '';
+    $('copyAddr').disabled = true;
+    return;
+  }
+  if (!T.OFFICE) {
+    shown = null;
+    $('outAddr').textContent = 'Addresses appear once Wire Office is deployed';
+    $('outNote').textContent = '';
+    $('copyAddr').disabled = true;
+    return;
+  }
+  try {
+    const [addr, open] = await Promise.all([T.addressFor(h), T.isOpen(h)]);
+    if (T.cleanHandle($('find').value) !== h) return;
+    shown = addr;
+    $('outAddr').textContent = addr;
+    $('copyAddr').disabled = false;
+    $('outNote').innerHTML = open
+      ? `The box of <b>@${esc(h)}</b> is open. <a href="/@${esc(h)}">See what is inside</a>`
+      : `Nobody has opened this box yet. Money sent here waits until someone does, and anyone can`;
+    $('openBox').hidden = false;
+    $('openBox').href = '/@' + h;
+    $('openBox').textContent = open ? 'See the box' : 'Open the box';
+  } catch (e) {
+    $('outAddr').innerHTML = '<span class="err">' + esc(e.shortMessage || e.message) + '</span>';
+  }
+}
+$('find').addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(lookup, 200); });
+$('find').addEventListener('keydown', e => { if (e.key === 'Enter') { const h = T.cleanHandle($('find').value); if (T.validHandle(h)) location.href = '/@' + h; } });
+$('copyAddr').onclick = async () => {
+  if (!shown) return;
+  const b = $('copyAddr');
+  try { await navigator.clipboard.writeText(shown); b.textContent = 'Copied'; } catch { b.textContent = 'Copy failed'; }
+  setTimeout(() => { b.textContent = 'Copy the address'; }, 1400);
+};
+
+/* the list of boxes */
+async function load() {
+  if (!T.OFFICE) { $('list').innerHTML = '<div class="empty">Boxes appear here once Wire Office is deployed</div>'; return; }
+  try {
+    const { boxes } = await T.loadAll();
+    $('sHandles').textContent = boxes.length;
+    $('sWired').textContent = T.fmtUsd(boxes.reduce((s, b) => s + T.usd(b.wired), 0));
+    $('sWaiting').textContent = T.fmtUsd(boxes.reduce((s, b) => s + T.usd(b.usdg), 0));
+    $('list').innerHTML = boxes.length ? boxes.map(b => {
+      const claimed = b.wallet && b.wallet !== T.ZERO;
+      return `<a class="row" href="/@${esc(b.handle)}">
+        <div class="who"><img src="https://unavatar.io/x/${esc(b.handle)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><b>@${esc(b.handle)}</b></div>
+        <div class="hideSm"><div class="k">Delivered</div><div class="v">${T.fmtUsd(T.usd(b.wired))}</div></div>
+        <div><div class="k">In the box</div><div class="v">${T.fmtUsd(T.usd(b.usdg))}</div></div>
+        <span class="tag ${claimed ? 'paid' : ''}">${claimed ? 'claimed' : 'unclaimed'}</span>
+      </a>`;
+    }).join('') : '<div class="empty">No boxes yet. Look up a handle above and open the first one</div>';
+  } catch (e) {
+    $('list').innerHTML = `<div class="empty">Could not read the office: ${esc(e.shortMessage || e.message)}</div>`;
+  }
+}
+
+$('connect').onclick = () => W.connect().catch(e => alert(e.shortMessage || e.message));
+W.onChange(s => { $('connect').textContent = s.address ? T.short(s.address) : 'Connect'; });
+W.restore();
+load();
+setInterval(() => { if (!document.hidden) load(); }, 30000);
+fetch('/api/tick').catch(() => {});
+</script>
+</body>
+</html>

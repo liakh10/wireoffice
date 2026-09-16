@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script src="/config.js"></script>
+<title>Wire Office · field manual</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="How Wire Office works: the address of a handle, pointing a Pons coin at it, the wire into dollars, the 48 hour claim and what the guardian cannot do">
+<meta property="og:image" content="/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/assets/favicon.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a1524;--deep:#060e1a;--panel:#10203a;--panel2:#16294a;--line:#24406a;--ink:#e9eff8;--dim:#93a8c6;--brass:#d9a441;--brass2:#f3cd7c;--tape:#efe8d6;--d:'Instrument Serif',Georgia,serif;--m:'Courier Prime',ui-monospace,monospace}
+*{box-sizing:border-box}
+html{overflow-x:hidden;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.8 var(--m)}
+[hidden]{display:none!important}
+a{color:inherit}
+img{max-width:100%;display:block}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(6,14,26,.93);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .in{width:min(1140px,100%);margin:0 auto;padding:0 max(16px,env(safe-area-inset-left));display:flex;align-items:center;gap:14px;height:62px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none}
+.brand img{width:32px;height:32px;border-radius:4px}
+.brand b{font:400 23px/1 var(--d);white-space:nowrap}
+.chip{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass2);border:1px solid rgba(217,164,65,.4);border-radius:2px;padding:3px 9px}
+.top .r{margin-left:auto;display:flex;gap:8px;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:34px;padding:0 13px;border-radius:4px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:400 11px var(--m);letter-spacing:.11em;text-transform:uppercase;cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn:hover{border-color:var(--brass);color:var(--brass2)}
+.btn.brass{background:linear-gradient(180deg,#e7b959,#c08d2b);border-color:#e7b959;color:#1a1204;font-weight:700}
+.icon{width:34px;height:34px;border-radius:4px;border:1px solid var(--line);display:grid;place-items:center}
+.page{width:min(1140px,100%);margin:0 auto;padding:0 max(16px,env(safe-area-inset-left));display:grid;grid-template-columns:225px 1fr;gap:34px;align-items:start}
+nav.toc{position:sticky;top:96px;padding:28px 0 40px}
+nav.toc ol{list-style:none;margin:0;padding:0;border-left:1px solid var(--line)}
+nav.toc a{display:block;padding:5px 0 5px 14px;margin-left:-1px;border-left:1px solid transparent;color:var(--dim);text-decoration:none;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+nav.toc a:hover{color:var(--ink)}
+nav.toc a.on{color:var(--brass2);border-left-color:var(--brass)}
+main{padding:28px 0 60px;min-width:0}
+h1{margin:0 0 6px;font:400 clamp(34px,5.4vw,56px)/1.05 var(--d)}
+.lede{color:var(--dim);max-width:58ch;margin:0 0 30px}
+section{scroll-margin-top:86px;padding:26px 0;border-top:1px solid var(--line)}
+section:first-of-type{border-top:0;padding-top:6px}
+h2{margin:0 0 12px;font:400 clamp(24px,3.4vw,34px)/1.1 var(--d)}
+h3{margin:22px 0 8px;font:400 11px var(--m);letter-spacing:.14em;text-transform:uppercase;color:var(--brass)}
+p{margin:0 0 12px;max-width:66ch;color:#ccdaeb}
+.kv{border:1px solid var(--line);border-radius:5px;background:var(--panel);overflow:hidden;margin:12px 0}
+.kv div{display:flex;justify-content:space-between;gap:14px;padding:9px 14px;border-bottom:1px solid rgba(36,64,106,.6);font-size:12.5px}
+.kv div:last-child{border-bottom:0}
+.kv span{color:var(--dim);text-transform:uppercase;letter-spacing:.09em;font-size:10.5px;padding-top:2px}
+.kv b{font-weight:400;text-align:right;word-break:break-word;color:var(--brass2)}
+pre{font:inherit;background:var(--deep);border:1px solid var(--line);border-radius:5px;padding:14px;overflow-x:auto;color:#b7cbe4;margin:12px 0;font-size:12.5px}
+ul{margin:0 0 12px;padding-left:18px;max-width:66ch;color:#ccdaeb}
+li{margin-bottom:5px}
+.note{border-left:2px solid var(--brass);padding-left:12px;color:var(--dim);margin:14px 0;max-width:62ch}
+.strip{width:min(520px,100%);background:var(--tape);color:#1d1a14;border-radius:2px;padding:22px 24px 26px;position:relative;box-shadow:0 22px 50px rgba(0,0,0,.45);cursor:pointer;margin:16px 0 8px}
+.strip::before,.strip::after{content:"";position:absolute;top:0;bottom:0;width:14px;background-image:radial-gradient(circle at center,#0a1524 3px,transparent 3.2px);background-size:14px 20px;opacity:.85}
+.strip::before{left:0}
+.strip::after{right:0}
+.strip .in2{padding:0 12px}
+.strip h3{margin:0;color:#1d1a14;font:400 22px var(--d);text-align:center;letter-spacing:.04em;text-transform:none}
+.strip .ln{border-top:1px dashed #b3aa93;margin:12px 0}
+.strip .r{display:flex;justify-content:space-between;gap:12px;font-size:12px}
+.strip .ca{margin-top:12px;text-align:center;font-size:clamp(10px,2.4vw,14px);word-break:break-all;font-weight:700}
+.strip .ca.soon{font:400 32px var(--d);letter-spacing:.14em}
+.strip .copy{display:block;margin:10px auto 0;background:none;border:0;color:#7a5a12;font:700 11px var(--m);letter-spacing:.18em;cursor:pointer}
+@media (max-width:900px){.page{grid-template-columns:1fr;gap:0}nav.toc{position:static;padding:22px 0 0}nav.toc ol{display:flex;flex-wrap:wrap;gap:4px;border-left:0}nav.toc a{border:1px solid var(--line);border-radius:2px;padding:4px 10px;margin:0}nav.toc a.on{border-color:var(--brass)}}
+@media (max-width:620px){.top .r .hideSm{display:none}.chip{display:none}.brand b{font-size:19px}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <a class="brand" href="/"><img src="/assets/favicon.png" alt=""><b>Wire Office</b></a>
+  <span class="chip">Field manual</span>
+  <div class="r">
+    <a class="btn hideSm" href="/">Handles</a>
+    <a class="btn brass" id="buyLink" target="_blank" rel="noopener">Buy</a>
+    <a class="icon" id="xLink" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+    <a class="btn" id="chartLink" target="_blank" rel="noopener">Chart</a>
+  </div>
+</div></header>
+
+<div class="page">
+<nav class="toc"><ol>
+  <li><a href="#what">What it is</a></li>
+  <li><a href="#address">The address</a></li>
+  <li><a href="#point">Pointing a coin</a></li>
+  <li><a href="#wire">The wire</a></li>
+  <li><a href="#claim">Claiming</a></li>
+  <li><a href="#wiretoken">$WIRE</a></li>
+  <li><a href="#guardian">The guardian</a></li>
+  <li><a href="#addresses">Addresses</a></li>
+  <li><a href="#faq">FAQ</a></li>
+</ol></nav>
+
+<main>
+  <h1>Wire Office</h1>
+  <p class="lede">An address book, not a launchpad. Every X handle already has a delivery address on Robinhood Chain; point a Pons coin's creator fee at it and the money arrives on its own, becomes dollars, and waits for the handle</p>
+
+  <section id="what">
+    <h2>What it is</h2>
+    <p>A Pons coin charges a creator fee on every trade and pays it to one address. Wire Office gives every X handle such an address, worked out from the handle itself, and a contract that turns whatever lands there into USDG and holds it until the handle proves it is the handle</p>
+    <p>We launch nothing. We take no cut of a launch. Anyone can point any coin at any handle without asking us, and nothing in these contracts can redirect that stream once Pons has recorded it</p>
+    <div class="kv">
+      <div><span>Chain</span><b>Robinhood Chain, 4663</b></div>
+      <div><span>Launchpad</span><b>Pons V2, any launcher</b></div>
+      <div><span>Paid in</span><b>USDG, the dollar of Robinhood Chain</b></div>
+      <div><span>Office fee</span><b>5% of every wire, burned as $WIRE</b></div>
+      <div><span>Who can open a box</span><b>anyone, for any handle</b></div>
+      <div><span>Who can empty one</span><b>only the handle, after proving it</b></div>
+    </div>
+  </section>
+
+  <section id="address">
+    <h2>The address</h2>
+    <p>The delivery address of a handle is a CREATE2 address: the office contract, a salt that is the hash of the handle, and the code of one box. Nothing about it is chosen by us, and the same handle always gives the same address</p>
+    <pre>addressFor("vladtenev")
+├── salt        keccak256("vladtenev")
+├── deployer    the Wire Office contract
+├── code        the same box for every handle
+└── address     the same for everyone, forever</pre>
+    <p>It works before anything is deployed. Money can be pointed at the address of a handle whose box does not exist yet: the Pons escrow simply keeps a balance for it. When someone calls <b>open</b>, the box lands on exactly that address and can reach everything that arrived while it was empty</p>
+    <div class="note">This is the part that makes the office unnecessary. You do not need our site, our keeper or our permission to pay a handle, you only need its address</div>
+  </section>
+
+  <section id="point">
+    <h2>Pointing a coin</h2>
+    <p>Launch on Pons the way you always would and set the creator fee recipient to the handle's address. Any launchpad interface, any tax, any name</p>
+    <pre>launchToken
+├── creatorFeeRecipient   the delivery address of the handle
+├── creatorTaxBps         yours to choose, Pons adds its own 1% curve fee
+└── from then on          every trade pays that address</pre>
+    <p>Pons records the fee recipient as the deployer of the coin's curve, which is what lets the box sweep its own fees later. Your wallet keeps nothing and owes nothing</p>
+    <p>The site lists coins on a handle's page only after reading the chain and confirming Pons really pays them there, so the list cannot be faked. A coin nobody listed still pays exactly the same</p>
+  </section>
+
+  <section id="wire">
+    <h2>The wire</h2>
+    <p>Fees do not walk. Pons holds them on the curve until the deployer sweeps and in its escrow until the recipient claims. Both are open to anyone here</p>
+    <pre>run([curve, curve, …])
+├── 1  sweep     curve fee + creator tax → the Pons escrow
+├── 2  collect   the escrow → the box
+├── 3  fee       5% → the burner, to be burned as $WIRE
+├── 4  settle    the rest → USDG on Uniswap V3, checked against Chainlink
+└── 5  payout    if the handle has claimed, the dollars go straight to it</pre>
+    <div class="kv">
+      <div><span>Price guard</span><b>Chainlink ETH/USD, minus 1.5%</b></div>
+      <div><span>Stale feed</span><b>the ETH waits for the next run</b></div>
+      <div><span>Per run cap</span><b>2 ETH, the rest rolls over</b></div>
+      <div><span>Withdraw function</span><b>none</b></div>
+    </div>
+    <p>A keeper runs this every half hour as a convenience. It holds no permission the page does not also give you, and if it stops, the button on any box page does the same thing from your own wallet</p>
+  </section>
+
+  <section id="claim">
+    <h2>Claiming</h2>
+    <p>Proving a handle without the X API. The handle publishes a post containing a one hour code and the full wallet address, the site reads that post back through fxtwitter, and the oracle signs the pair</p>
+    <pre>claim
+├── code      issued for handle + wallet, valid one hour
+├── post      published by the handle, checked, must be under two hours old
+├── verify    author, code and wallet checked, then the oracle signs
+├── bind      the signature starts a 48 hour wait, on chain
+├── wait      the guardian or the current wallet can cancel during it
+└── confirm   after 48 hours the wallet is set, and every later wire goes to it</pre>
+    <p>The wait is the point. A signature alone takes nothing: if the oracle key ever leaked, every attempt it signed would sit in public for two days, and either the guardian or the handle could cancel it</p>
+    <p>Changing the wallet later takes the same route, and the wallet in place can cancel a binding it did not start</p>
+  </section>
+
+  <section id="wiretoken">
+    <h2>$WIRE</h2>
+    <p>The office keeps 5% of every wire. That share goes to one burner contract, which buys $WIRE and sends it to the dead address. It is taken by the box itself, in the same transaction, not promised in a post</p>
+    <div class="kv">
+      <div><span>Office fee</span><b>5% of every wire, on chain</b></div>
+      <div><span>Route</span><b>the Pons curve, or the Uniswap v4 pool after graduation</b></div>
+      <div><span>Per call cap</span><b>0.5 ETH</b></div>
+      <div><span>Destination</span><b>0x…dEaD</b></div>
+      <div><span>Withdraw function</span><b>none, the token can be set once</b></div>
+    </div>
+    <p>$WIRE has no tax of its own and no privileges inside the protocol. It is what the office fee buys, nothing else</p>
+  </section>
+
+  <section id="guardian">
+    <h2>The guardian</h2>
+    <p>One role exists, and it is deliberately small</p>
+    <div class="kv">
+      <div><span>Can</span><b>cancel a pending binding during the 48 hours</b></div>
+      <div><span>Can</span><b>propose a new oracle, active only after a public 48 hour notice</b></div>
+      <div><span>Cannot</span><b>touch a box, its dollars, its ETH or its fee stream</b></div>
+      <div><span>Cannot</span><b>bind a wallet, only cancel one</b></div>
+      <div><span>Cannot</span><b>change the 5% office fee</b></div>
+      <div><span>Cannot</span><b>pause anything: there is no pause</b></div>
+    </div>
+    <p>There is no pause on purpose. A handle that has money waiting must never depend on us being willing to let it through</p>
+  </section>
+
+  <section id="addresses">
+    <h2>Addresses</h2>
+    <div class="kv">
+      <div><span>Office</span><b id="aOffice">not deployed yet</b></div>
+      <div><span>Burner</span><b id="aBurner">not deployed yet</b></div>
+      <div><span>USDG</span><b>0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168</b></div>
+      <div><span>Pons factory</span><b>0x7eD598BcEf8bd9Edd8C97A195C6d13f40801EC7e</b></div>
+      <div><span>Pons fee escrow</span><b>0xd3AFEB2a57f70eF218Aa82451c51B2fb0416Ac9e</b></div>
+      <div><span>Uniswap V3 WETH/USDG</span><b>0x52e65B17fB6E5BA00Ed806f37Afcd2DaA50271Ca</b></div>
+      <div><span>ETH / USD feed</span><b>0x78F3556b67E17Df817D51Ef5a990cDaF09E8d3A9</b></div>
+    </div>
+
+    <div class="strip" id="strip" role="button" tabindex="0" aria-label="Copy contract address">
+      <div class="in2">
+        <h3>Wire Office</h3>
+        <div class="ln"></div>
+        <div class="r"><span>TICKER</span><span>$WIRE</span></div>
+        <div class="r"><span>CHAIN</span><span>Robinhood Chain</span></div>
+        <div class="r"><span>LAUNCHPAD</span><span>Pons</span></div>
+        <div class="ln"></div>
+        <div class="r"><span>CONTRACT</span><span id="stripState"></span></div>
+        <div class="ca" id="caAddr"></div>
+        <button class="copy" id="caCopy" type="button">[ COPY ]</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <h2>FAQ</h2>
+    <h3>Someone pointed a coin at my handle, what now</h3>
+    <p>Nothing, unless you want it. The box fills whether or not you ever appear. When you do, open /@yourhandle, get a code, post it and wait two days</p>
+    <h3>Can the launcher take the fees back</h3>
+    <p>No. Pons records the recipient at launch and there is no call to change it, not for them, not for us</p>
+    <h3>Why dollars and not the coin</h3>
+    <p>Because a stranger's memecoin is not a payment. USDG is the dollar of this chain, the swap is checked against Chainlink, and what waits in a box does not depend on the coin that filled it</p>
+    <h3>What if the box is never opened</h3>
+    <p>The money keeps accruing to the address. Opening the box is one transaction that anyone can send, at any time, and it changes nothing about where the money was going</p>
+    <h3>What if the keeper stops</h3>
+    <p>Then you run it. Every step is an open call and the button on any box page does it from your own wallet</p>
+    <h3>Does the office take a cut of my launch</h3>
+    <p>No. The only fee is the 5% taken from what a box wires, and it is burned, not kept</p>
+  </section>
+</main>
+</div>
+
+<script type="module">
+const $ = id => document.getElementById(id);
+const S = window.SITE, CA = /^0x[0-9a-fA-F]{40}$/.test(S.CA) ? S.CA : null;
+const addr = v => /^0x[0-9a-fA-F]{40}$/.test(v || '') ? v : null;
+$('xLink').href = S.X_URL;
+$('buyLink').href = CA ? 'https://www.ponsfamily.com/launchpad/' + CA : window.PONS_HOME;
+$('chartLink').href = CA ? 'https://dexscreener.com/robinhood/' + CA : window.DEX_HOME;
+if (addr(window.WIRE_OFFICE)) $('aOffice').textContent = window.WIRE_OFFICE;
+if (addr(window.WIRE_BURNER)) $('aBurner').textContent = window.WIRE_BURNER;
+$('caAddr').textContent = CA || 'soon';
+$('caAddr').classList.toggle('soon', !CA);
+$('stripState').textContent = CA ? 'live' : 'not launched yet';
+async function copyCA(e) {
+  if (e) e.stopPropagation();
+  const b = $('caCopy');
+  if (!CA) b.textContent = '[ NOT YET ]';
+  else { try { await navigator.clipboard.writeText(CA); b.textContent = '[ COPIED ]'; } catch { b.textContent = '[ COPY FAILED ]'; } }
+  setTimeout(() => b.textContent = '[ COPY ]', 1400);
+}
+$('caCopy').onclick = copyCA;
+$('strip').addEventListener('click', e => { if (!e.target.closest('a')) copyCA(); });
+$('strip').addEventListener('keydown', e => { if (e.key === 'Enter') copyCA(); });
+
+const links = [...document.querySelectorAll('nav.toc a')];
+const spy = new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id)); });
+}, { rootMargin: '-86px 0px -65% 0px' });
+document.querySelectorAll('section').forEach(s => spy.observe(s));
+</script>
+</body>
+</html>
